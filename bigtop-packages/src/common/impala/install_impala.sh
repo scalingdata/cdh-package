@@ -154,12 +154,12 @@ function symlink_lib() {
     rm $file
     base=`basename $file`
     versionless=${base/-[0-9].*/.jar}
-    ln -s ../../$dir/`basename $versionless` $DEPENDENCY_DIR/
+    ln -s $dir/`basename $versionless` $DEPENDENCY_DIR/
 }
 # Remove MR1 Hive shim
 rm -f $DEPENDENCY_DIR/hive-shims-0.23*.jar $DEPENDENCY_DIR/hadoop-core*.jar;
-for file in $DEPENDENCY_DIR/libhdfs*.so*; do symlink_lib $file ../${NATIVE_LIB_DIR}; done
-for file in $DEPENDENCY_DIR/libhadoop*.so*; do symlink_lib $file hadoop/lib/native; done
+for file in $DEPENDENCY_DIR/libhdfs*.so*; do symlink_lib $file /usr/hdp/current/hadoop-client/../usr/lib; done
+for file in $DEPENDENCY_DIR/libhadoop*.so*; do symlink_lib $file /usr/hdp/current/hadoop-client/lib/native; done
 
 external_versionless_symlinks 'impala' ${LIB_DIR}/lib
 
@@ -219,12 +219,12 @@ for wrapper in impalad statestored catalogd ; do
 
 export IMPALA_BIN=\${IMPALA_BIN:-/usr/lib/impala/sbin}
 export IMPALA_HOME=\${IMPALA_HOME:-/usr/lib/impala}
-export HIVE_HOME=\${HIVE_HOME:-/usr/lib/hive}
-export HBASE_HOME=\${HBASE_HOME:-/usr/lib/hbase}
+export HIVE_HOME=\${HIVE_HOME:-/usr/hdp/current/hive-client}
+export HBASE_HOME=\${HBASE_HOME:-/usr/hdp/current/hbase-client}
 export IMPALA_CONF_DIR=\${IMPALA_CONF_DIR:-/etc/impala/conf}
-export HADOOP_CONF_DIR=\${HADOOP_CONF_DIR:-/etc/impala/conf}
-export HIVE_CONF_DIR=\${HIVE_CONF_DIR:-/etc/impala/conf}
-export HBASE_CONF_DIR=\${HBASE_CONF_DIR:-/etc/impala/conf}
+export HADOOP_CONF_DIR=\${HADOOP_CONF_DIR:-/etc/hadoop/conf}
+export HIVE_CONF_DIR=\${HIVE_CONF_DIR:-/etc/hive/conf}
+export HBASE_CONF_DIR=\${HBASE_CONF_DIR:-/etc/hbase/conf}
 export LIBHDFS_OPTS=\${LIBHDFS_OPTS:--Djava.library.path=/usr/lib/impala/lib}
 export MYSQL_CONNECTOR_JAR=\${MYSQL_CONNECTOR_JAR:-/usr/share/java/mysql-connector-java.jar}
 
@@ -297,8 +297,3 @@ for notice in ${NOTICES}; do
     install -d -m 0755 ${dir}
     cp ${notice} ${dir}/
 done
-
-# Cloudera specific
-install -d -m 0755 $LIB_DIR/cloudera
-cp cloudera/cdh_version.properties $LIB_DIR/cloudera/
-

@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-BIGTOP_VERSION=0.6.0
+BIGTOP_VERSION=0.7.0.1.3.0
 
 # Hadoop 0.20.0-based hadoop package
 HADOOP_NAME=hadoop
@@ -288,3 +288,16 @@ AVRO_SITE=$(APACHE_MIRROR)$(AVRO_DOWNLOAD_PATH)
 AVRO_ARCHIVE=$(APACHE_ARCHIVE)$(AVRO_DOWNLOAD_PATH)
 $(eval $(call PACKAGE,avro,AVRO))
 
+# Impala
+IMPALA_NAME=impala
+IMPALA_RELNOTES_NAME=Impala
+IMPALA_PKG_NAME=impala
+IMPALA_BASE_VERSION=2.2.0
+IMPALA_PKG_VERSION=$(IMPALA_BASE_VERSION)+hdp2.3.0+rocana1.3.0
+IMPALA_RELEASE_VERSION=1
+IMPALA_TARBALL_DST=impala-$(IMPALA_BASE_VERSION).tar.gz
+IMPALA_TARBALL_SRC=impala-$(IMPALA_BASE_VERSION)-hdp2.3.0-rocana1.3.0.tar.gz
+IMPALA_DOWNLOAD_PATH=/scalingdata-infrastructure/packages/src
+IMPALA_SITE=https://s3-us-west-2.amazonaws.com
+IMPALA_ARCHIVE=$(IMPALA_SITE)$(IMPALA_DOWNLOAD_PATH)
+$(eval $(call PACKAGE,impala,IMPALA))

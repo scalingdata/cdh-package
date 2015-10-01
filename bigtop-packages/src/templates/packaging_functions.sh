@@ -6,29 +6,26 @@ get_directory_for_jar() {
         avro*cassandra*) return;; # This is not included in our Avro distribution, but Mahout used to use it
         hadoop-client*) return;;
         hbase-client*-tests.jar) return;;
-        avro*) lib_dir='avro';;
         trevni*) lib_dir='avro';;
-        parquet*) lib_dir='parquet';;
-        zookeeper*) lib_dir='zookeeper';;
-        hadoop-aws*) lib_dir='hadoop/client';;
-        hadoop-yarn*) lib_dir='hadoop-yarn';;
-        hadoop-hdfs*) lib_dir='hadoop-hdfs';;
-        hadoop-archives*) lib_dir='hadoop-mapreduce';;
-        hadoop-distcp*) lib_dir='hadoop-mapreduce';;
-        hadoop-mapreduce*) lib_dir='hadoop-mapreduce';;
+        zookeeper*) lib_dir='zookeeper-client';;
+        hadoop-aws*) lib_dir='hadoop-client';;
+        hadoop-yarn*) lib_dir='hadoop-yarn-client';;
+        hadoop-hdfs*) lib_dir='hadoop-hdfs-client';;
+        hadoop-archives*) lib_dir='hadoop-mapreduce-client';;
+        hadoop-distcp*) lib_dir='hadoop-mapreduce-client';;
+        hadoop-mapreduce*) lib_dir='hadoop-mapreduce-client';;
         hadoop-ant*) lib_dir='hadoop-0.20-mapreduce';;
         hadoop-core*) lib_dir='hadoop-0.20-mapreduce';;
         hadoop-tools*) lib_dir='hadoop-0.20-mapreduce';;
         hadoop-streaming*-mr1*) lib_dir='hadoop-0.20-mapreduce/contrib/streaming';;
-        hadoop-streaming*) lib_dir='hadoop-mapreduce';;
-        hadoop*) lib_dir='hadoop';;
+        hadoop-streaming*) lib_dir='hadoop-mapreduce-client';;
+        hadoop*) lib_dir='hadoop-client';;
         hbase-indexer*) lib_dir='hbase-solr/lib';;
         hbase-sep*) lib_dir='hbase-solr/lib';;
-        hbase*) lib_dir='hbase';;
+        hbase*) lib_dir='hbase-client/lib';;
         hive-hcatalog*) lib_dir='hive-hcatalog/share/hcatalog';;
         hive-webhcat-java-client*) lib_dir='hive-hcatalog/share/webhcat/java-client';;
-        hive*) lib_dir='hive/lib';;
-        sentry*) lib_dir='sentry/lib';;
+        hive*) lib_dir='hive-client/lib';;
         solr*) lib_dir='solr';;
         lucene*) lib_dir='solr/webapps/solr/WEB-INF/lib';;
         kite*) lib_dir='kite';;
@@ -44,27 +41,24 @@ get_directory_for_jar() {
         sqoop*-1.99*) lib_dir='sqoop2/client-lib';;
         *) return;;
     esac
-    echo "/usr/lib/${lib_dir}"
+    echo "/usr/hdp/current/${lib_dir}"
 }
 
 # Looks up which package can be depended on to install a certain directory, to map symlinks to package dependencies
 function check_for_package_dependency() {
     case ${1} in
-        /usr/lib/avro) pkg=avro-libs;;
-        /usr/lib/parquet) pkg=parquet;;
-        /usr/lib/zookeeper) pkg=zookeeper;;
-        /usr/lib/hadoop-yarn) pkg=hadoop-yarn;;
-        /usr/lib/hadoop-hdfs) pkg=hadoop-hdfs;;
+        /usr/hdp/current/zookeeper-client) pkg=zookeeper;;
+        /usr/hdp/current/hadoop-yarn-client) pkg=hadoop-yarn;;
+        /usr/hdp/current/hadoop-hdfs-client) pkg=hadoop-hdfs;;
         /usr/lib/hadoop-0.20-mapreduce) pkg=hadoop-0.20-mapreduce;;
-        /usr/lib/hadoop-mapreduce) pkg=hadoop-mapreduce;;
-        /usr/lib/hadoop/client*) pkg=hadoop-client;;
-        /usr/lib/hadoop) pkg=hadoop;;
+        /usr/hdp/current/hadoop-mapreduce-client) pkg=hadoop-mapreduce;;
+        /usr/hdp/current/hadoop-client*) pkg=hadoop-client;;
+        /usr/hdp/current/hadoop-client) pkg=hadoop;;
         /usr/lib/hbase-solr/lib) pkg=hbase-solr;;
-        /usr/lib/hbase) pkg=hbase;;
+        /usr/hdp/current/hbase-client) pkg=hbase;;
         /usr/lib/hive-hcatalog/share/hcatalog) pkg=hcatalog;;
         /usr/lib/hive-hcatalog/share/webhcat/java-client) pkg=hive-webhcat;;
-        /usr/lib/hive/lib) pkg=hive;;
-        /usr/lib/sentry/lib) pkg=sentry;;
+        /usr/hdp/current/hive-client/lib) pkg=hive;;
         /usr/lib/solr/contrib/crunch) pkg=solr-crunch;;
         /usr/lib/solr/contrib/mr) pkg=solr-mapreduce;;
         /usr/lib/solr*) pkg=solr;;
@@ -145,7 +139,7 @@ function external_versionless_symlinks() {
     predicate=''
     skip=${1}; shift 1;
     # Find all files we might want to symlink (it's okay if this returns a superset of what we actually want to symlink)
-    for prefix in avro crunch parquet zookeeper hive hadoop hbase search sentry solr lucene kite trevni sqoop spark pig; do
+    for prefix in crunch zookeeper hive hadoop hbase search solr lucene kite trevni sqoop spark pig; do
         if [ -n "${predicate}" ]; then predicate="${predicate} -o "; fi
         predicate="${predicate} -name ${prefix}*.jar";
     done
